@@ -1,0 +1,348 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Assignment 1 - CSC358H5 Winter 2021</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Assignment 1 of CSC358H5 Winter 2019">
+    <meta name="author" content="Larry Yueli Zhang">
+    <!-- Le styles -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/style.css?v=190119" rel="stylesheet">
+
+    <!-- Fallback for NoScript -->
+    <noscript>
+        <style type="text/css">
+            body {
+                display: block;
+            }
+        </style>
+    </noscript>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+      </script>
+    <![endif]-->
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-22411948-1', 'toronto.edu');
+        ga('require', 'displayfeatures');
+        ga('send', 'pageview');
+    </script>
+</head>
+
+<body class="assignment-body">
+
+    <div class="assignment-content">
+        <h1>Assignment 1: Proxy Server</h1>
+        <h2>Due: Friday, January 29, 2021, 11:59 PM. In groups of up to 2 students</h2>
+
+        <div class="space"></div>
+
+        <h3>Overview</h3>
+
+        <p> In this assignment, you will learn about proxy servers, a.k.a., web
+        cache. Your task is to develop a small web proxy server which is able to
+        cache web pages. It is a very simple proxy server which only understands
+        GET-requests, but is able to handle all kinds of objects - not just HTML
+        pages, but also images, Javascripts, etc. We will also add some
+        unconventional features to our proxy server, such as modifying the HTTP
+        responses being returned to the browser. </p>
+
+        <p> Generally, when the client (web browser) makes a request, the
+        request is sent to the web server. The web server then processes the
+        request and sends back a response message to the requesting client. In
+        order to improve the performance, we create a proxy server between the
+        client and the web server. Now, both the request message sent by the
+        client and the response message delivered by the web server pass through
+        the proxy server. In other words, the client requests the objects via
+        the proxy server. The proxy server will forward the client’s request to
+        the web server. The web server will then generate a response message and
+        deliver it to the proxy server, which in turn sends it to the client. A
+        proxy server can also be used to anonymize web surfing. The destination
+        server receives requests from the  proxy server, and thus does not
+        receive information about the end user's address. </p>
+
+        <p><img width="90%" src="static/img/a1diagram.png" /></p>
+
+		<p><code>TODO</code>: You may work on this assignment in groups of up
+		to 2 people. Try to find a partner (there is a "Search for Teammates!"
+		post on Piazza) or decide to work individually. Make sure
+		you can login to MarkUs. If you work in a group, create a group on
+		MarkUs and invite your partner.</p>
+
+        <div class="space"></div>
+        <h3>Getting started: socket programming in Python</h3>
+
+        <p> In this assignment, you will use <strong>Python 3</strong>'s socket
+        API to implement the TCP connections used by the proxy server. To get
+        started with Python socket programming, please review the TCP
+        client/server examples presented at the following link:</p>
+
+        <p><a target="_blank" href="https://pymotw.com/3/socket/tcp.html">TCP/IP Client and Server - PyMOTW-3</a></p>
+
+        <p>Below is the link to the official documentation of the Python 3 socket library: </p>
+
+        <p><a target="_blank" href="https://docs.python.org/3/library/socket.html">socket - Low-level networking interface - Python 3.7.2 documentation</a></p>
+
+        <p> Once your are caught up with socket programing, you may start
+        completing your tasks in this assignment in the following steps.
+
+        <div class="space"></div>
+        <h3>Step 1: Forward HTTP requests and responses without caching</h3>
+
+        <p> First, implement a simple TCP server (on
+        <code>localhost:8888</code>) that can receive HTTP requests sent from
+        the browser clients. Once an HTTP request is received, your proxy server
+        needs to create a new client socket that connects to the destination web
+        server, and forward the HTTP request there. Print out the HTTP request
+        and take a close look: does it need to be modified before being
+        forwarded to the destination? </p>
+
+        <p>After sending the request to the destination web server, you'll
+        receive an HTTP response. You'll then forward this response back to the
+        browser client so that the requested web page can be displayed in the
+        browser. Things to observe and think about here: How many HTTP requests
+        are issued in order to retrieve one web page? How do you tell that you
+        have received the complete response from the destination? </p>
+
+        <p>Below are some URLs that you can use to test this step. Enter them in
+        a web browser (Firefox or Google Chrome) and see whether you're
+        getting the expected web page back.</p>
+
+        <ul>
+            <li><code>http://localhost:8888/www.example.org</code> (simple and small)</li>
+            <li><code>http://localhost:8888/www.cs.toronto.edu/~ylzhang/</code> (with CSS and Javascript)</li>
+            <li><code>http://localhost:8888/www.cs.toronto.edu/~arnold/</code> (a giant HTML to receive. Thanks, Arnold!)</li>
+            <li><code>http://localhost:8888/www.cs.toronto.edu/~ylzhang/csc258/memes.html</code> (one with many images)</li>
+        </ul>
+
+        <p>If your proxy server works correctly for the above test cases, it's a
+        very good start!</p>
+
+        <p><strong>Pro tip:</strong> Use the private (incognito) mode to visit
+        these URLs, and close-reopen the window, to avoid the interference of
+        browser caching.</p>
+
+        <div class="space"></div>
+        <h3>Step 2: Enable the TCP server to handle simultaneous connections</h3>
+
+        <p>If you haven't done so already, you now need to make your proxy
+        server become capable of handling multiple incoming connections at the
+        same time. The way to achieve this is to use the
+        <code>select.select()</code> method. Below are links to a tutorial
+        and the Python documentation. You'll figure it out!</p>
+
+        <p><a target="_blank" href="https://steelkiwi.com/blog/working-tcp-sockets/">How to Work with TCP Sockets in Python (with Select Example)</a></p>
+
+        <p><a target="_blank" href="https://docs.python.org/3/library/select.html">select - Waiting for I/O completion - Python 3.7.2 documentation</a></p>
+
+        <p>Make sure to maintain the select list properly by removing sockets
+        from the list whenever they become inactive.</p>
+
+        <p><strong>Note:</strong> There are other possible approaches to support
+        simultaneous connections (such as multi-threading, forking). However, in
+        order to meet the learning expectations of this assignment, you must use
+        the <code>select</code>-based approach.</p>
+
+        <div class="space"></div>
+        <h3>Step 3: Enable caching</h3>
+
+        <p>Now let's add the cache. For each requested URL, we save their
+        response from the destination in a <strong>file on the disk</strong> (so
+        the cache persists when we terminate and restart the proxy server). Next
+        time the same URL gets requests, we will load the response from the
+		corresponding file on the disk rather than creating a connection to the
+		destination server. You'll see that this greatly improves the page
+		loading speed on the browser side.</p>
+
+        <p>Things to think about in this step: How do we name the cache files,
+        i.e., how do convert the URLs into proper filenames? Things
+        not to worry about: you don't need to worry about replacement policies,
+        i.e., how to evict an item out of the cache when the cache becomes
+        "full". We simply assume that we have enough disk space and we never
+        need to evict any item.</p>
+
+        <p><strong>Note:</strong> To make your program portable, the cache files
+        should be located under the current folder (where <code>proxy.py</code>
+        is). Your program should NOT rely on the existence of any folder that's
+        outside the current folder (e.g., <code>/tmp</code>).</p>
+
+        <div class="space"></div>
+        <h3>Step 4: Make cache items expire</h3>
+
+        <p>In this step, we add a parameter that specifies how long a cached
+        item stays valid. This parameter is passed to the program as a command
+        argument, e.g., <code>python proxy.py 120</code>, which means that the
+        cached item expires 120 seconds (2 minutes) after it's created. To
+        implement this, you'll need to check the last-modified time of a file
+        (using <code>os.path.getmtime()</code>) and compare it with the current
+        time (<code>time.time()</code>). If the item expires, you need to fetch
+        it from the destination server again and update the cache
+        accordingly.</p>
+
+        <div class="space"></div>
+        <h3>Step 5: Modify the HTTP response</h3>
+
+		<p>This is a feature that conventional proxy servers don't have: when
+		the proxy server sends the web page back to the browser, we want to
+		"inject" a notification box to the web page, indicating whether the
+		displayed web page is a fresh version or a cached version. We also
+		display the timestamp which is the current local time for a fresh copy
+		and, for a cached copy, is the time when the item was inserted into the
+		cache.</p>
+
+        <p>For example, when you visit
+        <code>localhost:8888/www.cs.toronto.edu/~ylzhang/</code>, a fresh
+        version of the web page would look like the following:</p>
+
+        <p><img width="90%" src="static/img/a1fresh.png" /></p>
+
+        <p>and a cached version would look like the following:</p>
+
+        <p><img width="90%" src="static/img/a1cached.png" /></p>
+
+        <p>In order to add the notification box, you want to insert the
+        following segment of HTML code into somewhere in the <code>&lt;body&gt;</code>
+        region of the HTTP response.</p>
+
+        <p><code>&lt;p style="z-index:9999; position:fixed; top:20px; left:20px;
+        width:200px; </br>height:100px; background-color:yellow;
+        padding:10px; font-weight:bold;"&gt;the text&lt;/p&gt;</code></p>
+
+        <p>You may modify the above code a little bit to make it less ugly if
+        you'd like, but the code itself (and the length of it) should stay quite
+        similar to the above.</p>
+
+		<p>Here is how you can get time string given the timestamp in Python:<br/>
+		<code>time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))</code>
+		</p>
+
+		<p>This step may sound simple but there are some subtle issues that
+		you'll need to resolve.</p>
+
+		<p><strong>Issue 1</strong>: When you print out the HTTP response
+		received from the destination server, you may notice that the content
+		of the web page is unreadable binary data instead of the HTML you'd
+		expect. This is because the content is compressed using
+		<code>gzip</code> (check the "Content-Encoding" in the response header).
+		You need to get the decompressed version of the content in order to
+		make the modification, however, as described in the "Requirements"
+		section below, you're NOT allowed import the <code>zlib</code> library
+		which handles decompression. You need to come up with another solution
+		to this without using <code>zlib</code>. <strong>Hint:</strong> read Section 3.5 and Section 14.3 of <a
+					   target="_blank"
+		href="https://www.ietf.org/rfc/rfc2616.txt">RFC 2616</a>.</p>
+
+        <p><strong>Issue 2</strong>: After adding the notification box, visit
+        <code>localhost:8888/wwww.example.org</code> and look closely: compared
+        to the original web page at <code>www.example.org</code>, does your
+        proxy-version of the page look like <strong>truncated</strong>, i.e., not
+        displaying all the information that should be displayed? If so, you need
+        to debug it and fix it.</p>
+
+        <p>Once you finish this step, test the latest version of your proxy
+        server using all the URLs listed in Step 1, and make sure they all work
+        correctly. Then do even more testing until you're convinced that you have
+        the perfect proxy!</p>
+
+        <div class="space"></div>
+        <h3>Requirements</h3>
+
+        <p> Below are some specific requirements your code needs to satisfy just
+            so that it can be properly marked by the TA. </p>
+
+        <ol>
+            <li>Your code must be written in Python 3.</li>
+
+            <li>You are only allowed to have the following import statement in your code:<br/>
+                <code>import sys, os, time, socket, select</code><br/>
+                No other import statement is allowed.
+            </li>
+
+            <li>Your proxy server must be started by a command like the
+            following:<br/> <code>python proxy.py 120</code><br/> where 120 is
+            the maximum age (in seconds) for an item in the cache, i.e., when
+            set to 120, a cached item expires 120 seconds (2 minutes) after it's
+            created. <strong>No other action (e.g., creating a folder with a certain
+            name) should be required to start the program.</strong> </li>
+
+            <li>The URL entered in the browser to visit a web page via the proxy
+                server must be like the following: </br>
+                <code>http://localhost:8888/the.web.page/to/visit/</code><br/>
+                i.e., the host name must be <code>localhost</code> and the port number must be <code>8888</code>
+            </li>
+
+            <li>Your code must work as expected on the Linux lab computers in
+                DH-2020 or DH-2026, using Firefox or Chrome as the web browser.
+            </li>
+
+            <li>Your proxy server only need to be able to handle <code>GET</code> requests.</li>
+
+            <li>Your proxy server does not need to be able to handle <code>https</code> connections.</li>
+        </ol>
+
+        <div class="space"></div>
+        <h3>Marking</h3>
+
+        <p>Below is the tentative overall marking scheme of this assignment:</p>
+
+        <ul class="bullet-list">
+            <li>Step 1 and Step 2: 35%</li>
+            <li>Step 3 and Step 4: 35%</li>
+            <li>Step 5: 20%</li>
+            <li>Coding style and documentation: 10%</li>
+        </ul>
+
+		<p><strong>Coding style matters.</strong> Your code must be written in
+		a proper style and must be well commented so that anyone else can read
+		your code and easily understand how everything works in your code. If
+		you don't get to complete all the steps, make a note in your code
+		describing what has been done and what has not, and provide any
+		information that the TA needs to know to mark your submission.</p>
+
+        <div class="space"></div>
+        <h3>Submission</h3>
+
+        <p> You will submit your "<code>proxy.py</code>" (only this one file) by
+        using the <strong>web submission interface</strong> of MarkUs. You can
+        submit the same filename multiple times and only the latest version will
+        be marked, so it is a good practice to submit your first version well
+        before the deadline and then submit a newer version to overwrite when
+        you make some more progress. Again, make sure your code runs as expected
+        on a lab computer. </p>
+
+		<p> Late homework submissions are penalized by 1% for every hour of
+		lateness, rounded up, to a maximum of 24 hours. Submissions will no
+		longer be accepted 24-hours past the deadline, except for documented
+		unusual circumstances.</p>
+
+        <div class="space"></div>
+        <h3>Academic Integrity</h3>
+
+        <p><strong> Please be reminded that ALL assignment submissions will be
+        checked for plagiarism at the end of the term. Make sure to maintain
+        your academic integrity carefully, and protect your own work. It is much
+        better to take the hit on a lower assignment mark (just submit something
+        functional, even if incomplete), than risking much worse consequences by
+        committing an academic offence. </strong></p>
+
+        <footer>
+            &copy; 2020 Larry Yueli Zhang
+        </footer>
+    </div>
+</body>
+
+</html>
