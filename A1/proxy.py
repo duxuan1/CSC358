@@ -3,7 +3,8 @@ import sys, os, time, socket, select
 
 def parse_data(d: bytes):
     """
-
+    given data received
+    return http method, url, version, host
     """
     d = str(d).split("\\r\\n")
     req = d[0][2:].split(" ")
