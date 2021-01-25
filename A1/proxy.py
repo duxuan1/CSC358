@@ -36,17 +36,17 @@ if __name__ == "__main__":
                 data = connection.recv(2048)
                 print('received {!r}'.format(data))
                 if data:
-                    # create a new client socket
+                    # 1) create a new client socket
+                    # 2) connects to the destination web server
+                    # 3) forward the HTTP request
+                    # 4) receive an HTTP response
+                    # 5) forward this response back to the browser client
                     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     method, url, version, host = parse_data(data)
                     request = bytes(method + " / " + version + " " + "\r\nHost: " + host + "\r\n\r\n", "utf-8")
-                    # connects to the destination web server
                     client.connect((host, 80))
-                    # forward the HTTP request
                     client.send(request)
-                    # receive an HTTP response
                     response = client.recv(2048)
-                    # forward this response back to the browser client
                     connection.send(response)
                 else:
                     print('no data from', client_address)
