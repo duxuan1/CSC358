@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     break
 
         except:
-            print("you receive your website")
+            pass
 
         finally:
             # Clean up the connection
