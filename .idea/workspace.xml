@@ -26,7 +26,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Python.xwc">
+  <component name="RunManager" selected="Python.proxy">
     <configuration name="proxy (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CSC358" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -107,11 +107,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.xwc" />
-        <item itemvalue="Python.xwc" />
-        <item itemvalue="Python.xwc" />
-        <item itemvalue="Python.xwc" />
-        <item itemvalue="Python.xwc" />
+        <item itemvalue="Python.proxy" />
+        <item itemvalue="Python.proxy" />
+        <item itemvalue="Python.proxy" />
+        <item itemvalue="Python.proxy" />
+        <item itemvalue="Python.proxy" />
       </list>
     </recent_temporary>
   </component>

@@ -39,28 +39,42 @@ if __name__ == "__main__":
     # Listen for incoming connections
     sock_server.listen(1)
 
+    read_lst, write_lst, exceptions_lst = [sock_server], [], []
+
     while True:
-        # Wait for a connection
-        print('waiting for a connection')
-        connection, client_address = sock_server.accept()
-        try:
-            print('connection from', client_address)
-            data = connection.recv(100000)
-            if not data:
-                break
-            web_ser_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            request, host_name = get_host_and_request(data)
-            web_ser_socket.connect((host_name, 80))
-            web_ser_socket.send(request)
+        read, write, exceptions = select.select(read_lst, write_lst, exceptions_lst)
+        for s in read:
+            if s is sock_server:
+                # Wait for a connection
+                print('waiting for a connection')
+                connection, client_address = s.accept()
+                try:
+                    print('connection from', client_address)
+                    data = connection.recv(100000)
+                    if not data:
+                        break
+                    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    request, host_name = get_host_and_request(data)
+                    client.connect((host_name, 80))
+                    client.send(request)
 
-            response = bytes("HTTP/1.1 200 OK\r\n\r\n", "utf-8")
-            while response:
-                connection.sendall(response)
-                response = web_ser_socket.recv(100000)
+                    response = bytes("HTTP/1.1 200 OK\r\n\r\n", "utf-8")
+                    while response:
+                        connection.sendall(response)
+                        response = client.recv(100000)
+                    client.close()
 
-        except:
-            print("you receive your website")
+                except IOError:
+                    exit(1)
 
-        finally:
-            # Clean up the connection
-            connection.close()
+                finally:
+                    # Clean up the connection
+                    connection.close()
+
+            else:
+                by = s.recv(100000)
+                if not bytes:
+                    s.close()
+                    read_lst.remove(s)
+
+
