@@ -7,6 +7,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -19,7 +26,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
-  <component name="RunManager" selected="Python.proxy">
+  <component name="RunManager" selected="Python.xwc">
     <configuration name="proxy (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="CSC358" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -80,13 +87,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="xwc" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CSC358" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/A1/xwc.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.proxy" />
-        <item itemvalue="Python.proxy" />
-        <item itemvalue="Python.proxy" />
-        <item itemvalue="Python.proxy" />
-        <item itemvalue="Python.proxy" />
+        <item itemvalue="Python.xwc" />
+        <item itemvalue="Python.xwc" />
+        <item itemvalue="Python.xwc" />
+        <item itemvalue="Python.xwc" />
+        <item itemvalue="Python.xwc" />
       </list>
     </recent_temporary>
   </component>
@@ -106,10 +131,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="826" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611561042218" />
-    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog" timestamp="1611555970232">
+    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog" timestamp="1611839624845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611555970232" />
+    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611839624845" />
     <state width="936" height="347" key="GridCell.Tab.0.bottom" timestamp="1611561047747">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -146,6 +171,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="920" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1611553533029" />
+    <state x="953" y="0" width="974" height="1047" key="dock-window-1" timestamp="1611587479650">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="953" y="0" width="974" height="1047" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1611587479650" />
     <state x="1034" y="230" width="672" height="678" key="search.everywhere.popup" timestamp="1611565012472">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

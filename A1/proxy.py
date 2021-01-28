@@ -1,16 +1,30 @@
 import sys, os, time, socket, select
 
 
-def parse_data(d: bytes):
-    """
-    given data received
-    return http method, url, version, host
-    """
-    d = str(d).split("\\r\\n")
-    req = d[0][2:].split(" ")
-    method, url, version = req
-    host = url[1:]
-    return method, url, version, host
+def extract(url):
+    count = 0
+    index = 0
+    for i in range(len(url)):
+        if url[i] == '/':
+            count += 1
+        if count == 2:
+            index = i
+            break
+    if count != 2:
+        return '/ ', url[1:]
+    return url[index:] + '\r\n', url[1:index]
+
+
+def get_host_and_request(data):
+    request = str(data).split('\\r\\n')[0]
+    lst = request[2:].split(" ")
+    http_method = lst[0]
+    url = lst[1]
+    http_protocol = lst[2]
+    data, host_name = extract(url)
+    request = bytes(http_method + ' ' + data + http_protocol + "\r\nHost: " +
+                    host_name + "\r\n\r\n", "utf-8")
+    return request, host_name
 
 
 if __name__ == "__main__":
@@ -31,29 +45,21 @@ if __name__ == "__main__":
         connection, client_address = sock_server.accept()
         try:
             print('connection from', client_address)
-            # Receive the data in small chunks and retransmit it
-            while True:
-                data = connection.recv(2048)
-                print('received {!r}'.format(data))
-                if data:
-                    # 1) create a new client socket
-                    # 2) connects to the destination web server
-                    # 3) forward the HTTP request
-                    # 4) receive an HTTP response
-                    # 5) forward this response back to the browser client
-                    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    method, url, version, host = parse_data(data)
-                    request = bytes(method + " / " + version + " " + "\r\nHost: " + host + "\r\n\r\n", "utf-8")
-                    client.connect((host, 80))
-                    client.send(request)
-                    response = client.recv(2048)
-                    connection.send(response)
-                else:
-                    print('no data from', client_address)
-                    break
+            data = connection.recv(100000)
+            if not data:
+                break
+            web_ser_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            request, host_name = get_host_and_request(data)
+            web_ser_socket.connect((host_name, 80))
+            web_ser_socket.send(request)
+
+            response = bytes("HTTP/1.1 200 OK\r\n\r\n", "utf-8")
+            while response:
+                connection.sendall(response)
+                response = web_ser_socket.recv(100000)
 
         except:
-            pass
+            print("you receive your website")
 
         finally:
             # Clean up the connection
