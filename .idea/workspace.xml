@@ -24,6 +24,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager" selected="Python.proxy">
@@ -73,6 +74,9 @@
       <module name="CSC358" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A1" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -91,6 +95,9 @@
       <module name="CSC358" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A1" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -131,10 +138,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="826" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611561042218" />
-    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog" timestamp="1611839624845">
+    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog" timestamp="1611885650783">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611839624845" />
+    <state x="1053" y="100" width="774" height="847" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1611885650783" />
     <state width="936" height="347" key="GridCell.Tab.0.bottom" timestamp="1611561047747">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
