@@ -88,6 +88,44 @@ def update_response(response, s):
     return response
 
 
+def data_handler(s, expire_time, inputs):
+    """
+    receive HTTP request
+    create a new client socket that connects to the destination web server,
+    and forward the HTTP request
+    """
+    data = s.recv(1024)
+    if data:
+        request, file_name, request_data, host_name, remain_request = extra_info_from_data(data)
+        if os.path.isfile(file_name) and \
+                float(os.path.getmtime(file_name)) + expire_time >= float(time.time()):
+            f = open(file_name, "rb")
+            s.send(f.read())
+            f.close()
+        else:
+            try:
+                web_ser_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                web_ser_socket.connect((host_name, 80))
+                request = bytes('GET' + ' ' + request_data + 'HTTP/1.1' + '\r\nHost: '
+                                + host_name + '\r\n', "utf-8") + remain_request
+                request = change_accept_encoding(request)  # change default accept encoding to identity
+                web_ser_socket.send(request)
+                response = cache_data = web_ser_socket.recv(10000000)
+                if bytes('Referer: ', 'utf-8') not in request:  # step5 modify html code
+                    response = update_response(response, 'FRESH VERSION AT:')
+                    cache_data = update_response(response, 'CACHED VERSION AS OF:')
+                f = open(file_name, "wb")
+                f.write(cache_data)
+                s.send(response)
+                web_ser_socket.close()
+                f.close()
+
+            except IOError:
+                print(host_name)
+    else:
+        inputs.remove(s)
+
+
 def main():
     """
     main program of running socket server
@@ -105,36 +143,7 @@ def main():
                 connection.setblocking(0)
                 inputs.append(connection)
             else:
-                data = s.recv(1024)
-                if data:
-                    request, file_name, request_data, host_name, remain_request = extra_info_from_data(data)
-                    if os.path.isfile(file_name) and \
-                            float(os.path.getmtime(file_name)) + expire_time >= float(time.time()):
-                        f = open(file_name, "rb")
-                        s.send(f.read())
-                        f.close()
-                    else:
-                        try:
-                            web_ser_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                            web_ser_socket.connect((host_name, 80))
-                            request = bytes('GET' + ' ' + request_data + 'HTTP/1.1' + '\r\nHost: '
-                                            + host_name + '\r\n', "utf-8") + remain_request
-                            request = change_accept_encoding(request)  # change default accept encoding to identity
-                            web_ser_socket.send(request)
-                            response = cache_data = web_ser_socket.recv(10000000)
-                            if bytes('Referer: ', 'utf-8') not in request:  # step5 modify html code
-                                response = update_response(response, 'FRESH VERSION AT:')
-                                cache_data = update_response(response, 'CACHED VERSION AS OF:')
-                            f = open(file_name, "wb")
-                            f.write(cache_data)
-                            s.send(response)
-                            web_ser_socket.close()
-                            f.close()
-
-                        except IOError:
-                            print(host_name)
-                else:
-                    inputs.remove(s)
+                data_handler(s, expire_time, inputs)
 
 
 if __name__ == "__main__":   # main program
