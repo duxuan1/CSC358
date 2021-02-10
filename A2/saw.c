@@ -66,10 +66,12 @@ void to_application_layer(int AorB, char datasent[MSG_SIZE]);
 
 #define A 0
 #define B 1
+#define wait_call 0
+#define wait_ack 1
 
 struct A_side {
+    int state;
     int seq;
-    int ack;
     float increment;
     struct pkt prev_pck; // in case a resend needed
 } A_side;
@@ -103,17 +105,24 @@ int is_corrupted(struct pkt packet) {
 }
 
 /*
- * check if a packet is corrupted
- * return 0 if not corrupted
- * return 1 if corrupyed
+ * create a packet from meaeeage
  */
 struct pkt make_pkt(struct msg message) {
     struct pkt packet;
     packet.seqnum = A_side.seq;
-    packet.acknum = A_side.ack;
-    strncpy(packet.payload, message.data, 20);
+    strncpy(packet.payload, message.data, MSG_SIZE);
     packet.checksum = get_checksum(packet);
     return packet;
+}
+
+/*
+ * send acknowledge to A side from B side
+ */
+void send_ack() {
+    struct pkt packet;
+    packet.acknum = B_side.seq;
+    packet.checksum = get_checksum(packet);
+    to_network_layer(B, packet);
 }
 
 /* 
@@ -121,46 +130,74 @@ struct pkt make_pkt(struct msg message) {
  * entity A routines are called. You can use it to do any initialization 
  */
 void A_init(void) {
-    A_side.ack = 0;
+    A_side.state = wait_call;
     A_side.seq = 0;
     A_side.increment = 1000;
 }
 
 /* called from the application layer, passed the data to be sent to other side */
 void A_send(struct msg message) {
+    if (A_side.state != wait_call) {
+        printf("    A_send: wong state.\n");
+        return;
+    }
     struct pkt new_packet = make_pkt(message);
+    A_side.state = wait_ack;
     to_network_layer(A, new_packet);
     starttimer(A, A_side.increment);
 }
 
 /* called from network layer, when a packet arrives for transport layer */
 void A_recv(struct pkt packet) {
+    if (A_side.state != wait_ack) {
+        printf("    A_recv: wrong state.\n");
+        return;
+    }
     if (is_corrupted(packet) == 1) {
-        printf("A_recv: packet corrupted.\n");
+        printf("    A_recv: packet corrupted.\n");
         return;
     }
     if (packet.acknum != A_side.seq) {
-        printf("A_recv: not the expected ACK.\n");
+        printf("    A_recv: not the expected ACK.\n");
         return;
     }
     stoptimer(A);
-    
+    A_side.seq = 1 - A_side.seq;
+    A_side.state = wait_call;
 }
 
 /* called when A's timer goes off (timeout) */
 void A_timeout(void) {
-    
+    if (A_side.state != wait_ack) {
+        printf("    A_timeout: wrong state.\n");
+        return;
+    }
+    printf("    A_timeout: resend last packet: %s.\n", A_side.prev_pck.payload);
+    to_network_layer(A, A_side.prev_pck);
+    starttimer(A, A_side.increment);
 }
 
 /* The following routine will be called once (only) before any other entity B
  * routines are called. You can use it to do any initialization */
 void B_init(void) {
-    
+    B_side.seq = 0;
 }
 
 /* called from network layer, when a packet arrives for transport layer at B*/
 void B_recv(struct pkt packet) {
-    
+    if (is_corrupted(packet) == 1) {
+        printf("    B_recv: packet corrupted.\n");
+        return;
+    }
+    if (packet.seqnum != B_side.seq) {
+        printf("    B_recv: not the expected ACK.\n");
+        return;
+    }
+    printf("    B_recv: recv message: %s\n", packet.payload);
+    printf("    B_recv: send ACK.\n");
+    send_ack();
+    to_application_layer(B, packet.payload);
+    B_side.seq = 1 - B_side.seq;
 }
 
 /* called from the application layer, passed the data to be sent to other side.
