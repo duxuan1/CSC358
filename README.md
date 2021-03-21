@@ -1,4 +1,4 @@
-CSC358 Principles of Computer Networks
+# CSC358 Principles of Computer Networks
 
 Introduction to computer networks and systems programming of networks. Basic understanding of computer networks and network
 protocols. Network hardware and software, routing, addressing, congestion control, reliable data transfer, and socket programming.
