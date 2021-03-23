@@ -31,7 +31,8 @@ class Node:
         # path to each of the other nodes in the graph
         # You need to make sure this predecessors list is correctly updated
         # throughout the algorithm's execution
-        self.predecessors = [None for _ in range(NUM_NODES)]
+        self.predecessors = [i for i in range(NUM_NODES)]
+        self.predecessors[self.nodeid] = None
 
         # update node table row for self
         self.dist_table[self.nodeid] = self.simulator.cost[self.nodeid]
@@ -105,17 +106,12 @@ class Node:
         # update row for self
         for node in self.neighbours:
             dp = sender_vector[node] + self_vector[sender]
+            # if new path is shorter, then update dis table and predecessors
             if dp < self_vector[node]:
-                update_call = True
+                update_call = True  # shorter path need to notify neighbours
                 self_vector[node] = dp
-            # update predecessor
-            if not self.predecessors[node]:
-                self.predecessors[node] = node
-            else:
-                if self_vector[node] < self.predecessors[node]:
-                    self_vector[node] = node
+                self.predecessors[node] = sender
 
-        print(self.predecessors)
         # call link to layer if shorter path found
         if update_call:
             self.send_packet_to_neighbours(self_vector)
