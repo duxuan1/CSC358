@@ -12,11 +12,12 @@ NUM_NODES = 3
 EVT_FROM_LINK_LAYER = 0
 EVT_LINK_CHANGE = 1
 
+
 class Packet:
-    '''
+    """
     A packet is a message that is sent between neighbouring nodes, to tell the
     neighbour about their latest distance vector.
-    '''
+    """
 
     def __init__(self, src, dest, dist_vector):
 
@@ -28,9 +29,9 @@ class Packet:
         assert len(self.dist_vector) == NUM_NODES
 
     def copy(self):
-        '''
+        """
         return a copy of the packet
-        '''
+        """
         pkt = Packet(self.src, self.dest, self.dist_vector)
         return pkt
 
@@ -48,15 +49,15 @@ class Packet:
 
     def __str__(self):
 
-        return "src: {}, dest: {}, dist_vector: {}".format(\
-                self.src, self.dest, self.dist_vector)
+        return "src: {}, dest: {}, dist_vector: {}".format(self.src, self.dest, self.dist_vector)
+
 
 class Event:
-    '''
-    Two types of events: 
+    """
+    Two types of events:
     - EVT_FROM_LINK_LAYER: a node receives a message from the link layer
     - EVT_LINK_CHANGE: a node's link's cost is changed
-    '''
+    """
     def __init__(self, time: float, typ: int, node: int, pkt: Packet=None):
 
         self.time = time    # time of the event
@@ -84,30 +85,30 @@ class Event:
 
     def __str__(self):
 
-        return "time: {}, type: {}, node: {}, packet: {}".format(\
-                self.time, self.type, self.node, self.packet)
+        return "time: {}, type: {}, node: {}, packet: {}".format(self.time, self.type, self.node, self.packet)
+
 
 class EventList:
-    '''
+    """
     The list of events in the simulation
-    '''
+    """
     def __init__(self):
 
         # data is a list of Event
         self.data = list()
 
     def add(self, evt: Event):
-        '''
+        """
         add a new event to the event list
-        '''
+        """
         self.data.append(evt)
         return
 
     def remove_next(self) -> Event:
-        '''
-        remove and return the event with the smallest time value, 
+        """
+        remove and return the event with the smallest time value,
         i.e., the next event to take place
-        '''
+        """
         if len(self.data) == 0:
             return None
         smallest_time = inf
@@ -119,10 +120,10 @@ class EventList:
         return self.data.pop(smallest_index)
 
     def get_last_packet_time(self, from_node: int, to_node: int) -> float:
-        '''
+        """
         return the time of the last message from from_node to to_node
         return 0 if such message does not exist in the event list
-        '''
+        """
         rv = 0.0
         for evt in self.data:
             if evt.get_type() == EVT_FROM_LINK_LAYER and \
@@ -131,15 +132,17 @@ class EventList:
                 rv = max(rv, evt.get_time())
         return rv
 
+
 class Simulator:
-    '''
+    """
     The simulator class
-    '''
+    """
     def __init__(self, link_changes: int, seed: int):
-        '''
+        """
         link_changes (1 or 0): whether to include link-change event in the sim
         seed: seed for random number generator
-        '''
+        """
+        self.cost = []
         self.total_msgs = 0
         self.link_changes = link_changes
         self.event_list = EventList()
@@ -150,7 +153,7 @@ class Simulator:
         # manually or randomly
         # this method will populate self.cost
         self.generate_topology()
-        #self.generate_random_topology()
+        # self.generate_random_topology()
 
         # creating the nodes of in the graph
         # calling the __init__ method of the Node class
@@ -161,35 +164,31 @@ class Simulator:
             self.event_list.add(Event(10000.0, EVT_LINK_CHANGE, 0))
 
     def generate_topology(self):
-        '''
+        """
         This method manually defines a specific input graph.
         Modify this method to test different graphs
         Make sure the size of this graph matches NUM_NODES
-        '''
-        self.cost = [
-                      [0,   4,   50], 
-                      [4,   0,   1], 
-                      [50,  1,   0]
-                    ]
-        return
+        """
+        self.cost = [[0,   4,   50],
+                     [4,   0,   1],
+                     [50,  1,   0]]
 
     def generate_random_topology(self):
-        '''
+        """
         This method generates a random topology with NUM_NODES nodes
-        '''
+        """
         choices = [1, 2, 3, 5, 7, 10, 15, 20, inf, inf]
         self.cost = [[0 for _ in range(NUM_NODES)] for _ in range(NUM_NODES)]
         for i in range(NUM_NODES):
             for j in range(i+1, NUM_NODES):
                 self.cost[i][j] = self.cost[j][i] = random.choice(choices)
-        return
 
     def generate_link_change(self):
-        '''
+        """
         This method defines the link-change events that are added in __init__
         The method is called when processing a link-change event in the event list.
         You may modify this method to test different link-change events.
-        '''
+        """
         nodea = 0
         nodeb = 1
         new_cost = 2
@@ -203,21 +202,19 @@ class Simulator:
         return
 
     def run(self):
-        '''
+        """
         Run the simulation
-        '''
+        """
         next = None
         while True:
+
             next = self.event_list.remove_next()
             if next is None:
                 break
-
-            print("\nmain(): event received. t={}, node={}".format(\
-                    next.get_time(), next.get_node()))
+            print("\nmain(): event received. t={}, node={}".format(next.get_time(), next.get_node()))
             if next.get_type() == EVT_FROM_LINK_LAYER:
                 p = next.get_packet()
-                print("\tsrc={}, dest={}, contents={}".format(\
-                        p.get_src(), p.get_dest(), p.get_dist_vector()))
+                print("\tsrc={}, dest={}, contents={}".format(p.get_src(), p.get_dest(), p.get_dist_vector()))
             elif next.get_type() == EVT_LINK_CHANGE:
                 print("\tLink cost change.")
             else:
@@ -237,14 +234,13 @@ class Simulator:
             else:
                 raise RuntimeError("Panic: Unknown event type")
 
-        print("\nSimulator terminated at t={}, no packets in medium.".format(\
-                self.clocktime))
+        print("\nSimulator terminated at t={}, no packets in medium.".format(self.clocktime))
         print("Total number of messages:", self.total_msgs)
         print("\nFinal distance tables:")
         for node in self.nodes:
             print()
             node.print_dist_table()
-        
+
         print("\nShortest paths:")
         for i in range(NUM_NODES):
             for j in range(i+1, NUM_NODES):
@@ -252,9 +248,9 @@ class Simulator:
         return
 
     def to_link_layer(self, pkt: Packet):
-        '''
+        """
         send a Packet pkt to the link layer
-        '''
+        """
         current_packet = None
         arrival_time = None
 
@@ -270,50 +266,46 @@ class Simulator:
         if self.cost[pkt.get_src()][pkt.get_dest()] == inf:
             raise RuntimeError("to_link_layer(): src and dest not connected")
 
-        print("to_link_layer(): src={}, dest={}, distance: {}".format(\
-                pkt.get_src(), pkt.get_dest(), pkt.get_dist_vector()))
+        print("to_link_layer(): src={}, dest={}, distance: {}".format(pkt.get_src(),
+                                                                      pkt.get_dest(), pkt.get_dist_vector()))
 
         # Schedule the arrival time of this packet
-        arrival_time = self.event_list.get_last_packet_time(\
-                pkt.get_src(), pkt.get_dest())
+        arrival_time = self.event_list.get_last_packet_time(pkt.get_src(), pkt.get_dest())
         if arrival_time == 0.0:
             arrival_time = self.clocktime
         arrival_time += (1.0 + random.random() * 9.0)
 
         print("to_link_layer(): scheduled arrival_time: {}".format(arrival_time))
         current_packet = pkt.copy()
-        self.event_list.add(Event(arrival_time, EVT_FROM_LINK_LAYER, \
-                current_packet.get_dest(), current_packet))
+        self.event_list.add(Event(arrival_time, EVT_FROM_LINK_LAYER, current_packet.get_dest(), current_packet))
 
         self.total_msgs += 1
         return
 
     def print_shortest_path(self, from_node, to_node):
-        '''
+        """
         print the shortest path from from_node to to_node
-        '''
+        """
         path = [from_node]
         curr = from_node
         if self.nodes[from_node].get_dist_vector()[to_node] == inf:
-            print("Path does not exist from Node {} to {}".format(\
-                    from_node, to_node))
+            print("Path does not exist from Node {} to {}".format(from_node, to_node))
             return
         while curr != to_node:
             curr = self.nodes[curr].get_predecessor(to_node)
             path.append(curr)
-        print("Path from Node {} to {}: {}".format(from_node, to_node,\
-                " -> ".join([str(x) for x in path])))
+        print("Path from Node {} to {}: {}".format(from_node, to_node, " -> ".join([str(x) for x in path])))
         return
 
+
 if __name__ == "__main__":
-
-    if len(sys.argv) != 3:
-        print("Usage: python3 dvsim.py HasLinkChange Seed")
-        exit(0)
-
-    has_link_change = int(sys.argv[1])
-    seed = int(sys.argv[2])
-
-    sim = Simulator(has_link_change, seed)
+    # if len(sys.argv) != 3:
+    #     print("Usage: python3 dvsim.py HasLinkChange Seed")
+    #     exit(0)
+    #
+    # has_link_change = int(sys.argv[1])
+    # seed = int(sys.argv[2])
+    #
+    # sim = Simulator(has_link_change, seed)
+    sim = Simulator(0, 0)
     sim.run()
-

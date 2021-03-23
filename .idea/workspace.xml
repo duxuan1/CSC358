@@ -18,6 +18,53 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
+  </component>
+  <component name="RunManager" selected="Python.dvsim">
+    <configuration name="dvnode" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CSC358" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A3" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/A3/dvnode.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="dvsim" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CSC358" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A3" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/A3/dvsim.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.dvsim" />
+        <item itemvalue="Python.dvnode" />
+        <item itemvalue="Python.dvnode" />
+        <item itemvalue="Python.dvsim" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -29,5 +76,54 @@
       <updated>1616296463069</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1061" y="357" key="FileChooserDialogImpl" timestamp="1616423904806">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1061" y="357" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1616423904806" />
+    <state width="1899" height="65" key="GridCell.Tab.0.bottom" timestamp="1616485481747">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481747" />
+    <state width="1899" height="65" key="GridCell.Tab.0.center" timestamp="1616485481747">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481747" />
+    <state width="1899" height="65" key="GridCell.Tab.0.left" timestamp="1616485481747">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481747" />
+    <state width="1899" height="65" key="GridCell.Tab.0.right" timestamp="1616485481747">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481747" />
+    <state width="1899" height="65" key="GridCell.Tab.1.bottom" timestamp="1616485481748">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481748" />
+    <state width="1899" height="65" key="GridCell.Tab.1.center" timestamp="1616485481748">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481748" />
+    <state width="1899" height="65" key="GridCell.Tab.1.left" timestamp="1616485481748">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481748" />
+    <state width="1899" height="65" key="GridCell.Tab.1.right" timestamp="1616485481748">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="65" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1616485481748" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
