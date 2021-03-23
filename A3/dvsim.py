@@ -307,5 +307,7 @@ if __name__ == "__main__":
     # seed = int(sys.argv[2])
     #
     # sim = Simulator(has_link_change, seed)
+    # sim.run()
+
     sim = Simulator(0, 0)
     sim.run()

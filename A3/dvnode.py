@@ -80,9 +80,8 @@ class Node:
 
     def send_packet_to_neighbours(self, vector):
         for i in self.neighbours:
-            if i != self.nodeid and self.simulator.cost[self.nodeid][i] != inf:
-                packet = Packet(self.nodeid, i, vector)
-                self.simulator.to_link_layer(packet)
+            packet = Packet(self.nodeid, i, vector)
+            self.simulator.to_link_layer(packet)
 
     def update(self, pkt: Packet):
         """
@@ -100,11 +99,6 @@ class Node:
         self_vector = self.dist_table[self.nodeid]
         update_call = False
 
-        # if sender row has at least one column smaller than current column
-        for node in range(NUM_NODES):
-            if sender_vector[node] < self.dist_table[sender][node]:
-                update_call = True
-
         # copy sender's row to dis table
         self.dist_table[sender] = sender_vector
 
@@ -114,7 +108,14 @@ class Node:
             if dp < self_vector[node]:
                 update_call = True
                 self_vector[node] = dp
+            # update predecessor
+            if not self.predecessors[node]:
+                self.predecessors[node] = node
+            else:
+                if self_vector[node] < self.predecessors[node]:
+                    self_vector[node] = node
 
+        print(self.predecessors)
         # call link to layer if shorter path found
         if update_call:
             self.send_packet_to_neighbours(self_vector)

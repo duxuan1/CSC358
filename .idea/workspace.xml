@@ -10,6 +10,13 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="hiddenUrls">
+      <set>
+        <option value="https://github.com/duxuan1/CSC358" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectId" id="1q37XukFb7yrfXKwUMkn9RsrESO" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
