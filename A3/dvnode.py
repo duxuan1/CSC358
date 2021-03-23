@@ -117,8 +117,7 @@ class Node:
 
         # call link to layer if shorter path found
         if update_call:
-            packet = Packet(self.nodeid, sender, self_vector)
-            self.simulator.to_link_layer(packet)
+            self.send_packet_to_neighbours(self_vector)
 
     def link_cost_change_handler(self, which_link: int, new_cost: int):
         """
