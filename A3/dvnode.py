@@ -108,7 +108,7 @@ class Node:
             dp = sender_vector[node] + self_vector[sender]
             # if new path is shorter, then update dis table and predecessors
             if dp < self_vector[node]:
-                update_call = True  # shorter path need to notify neighbours
+                update_call = True  # shorter path found, need to notify neighbours
                 self_vector[node] = dp
                 self.predecessors[node] = sender
 
