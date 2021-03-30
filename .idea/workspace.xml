@@ -31,7 +31,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Leetcode" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="restartRequiresConfirmation" value="false" />
   </component>
   <component name="RunManager" selected="Python.dvsim">
@@ -60,6 +60,9 @@
       <module name="CSC358" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/A3" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -95,10 +98,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1061" y="357" key="FileChooserDialogImpl" timestamp="1616495052466">
+    <state x="1061" y="357" key="FileChooserDialogImpl" timestamp="1616735569083">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1061" y="357" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1616495052466" />
+    <state x="1061" y="357" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1616735569083" />
     <state width="1899" height="65" key="GridCell.Tab.0.bottom" timestamp="1616485481747">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

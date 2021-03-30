@@ -13,6 +13,8 @@ class Node:
         """
         self.nodeid = nodeid        # nodeid is the node number
         self.simulator = simulator
+        self.neighbours = self.find_neighbours()  # add node's neighbours to self.neighbours  
+        self.send_pkt(self.simulator.cost[self.nodeid]) # send packet to node's neighbours  
         # simulator is passed here so that the node can access 
         # - simulator.cost[nodeid] (only access the costs of this node's links) and
         # - simulator.to_link_layer() to send the message
@@ -24,24 +26,14 @@ class Node:
         # the algorithm's execution.
         # Tip: although dist_table has N rows, each node might only access and
         # update a subset of the rows.
-        self.dist_table = [[inf for _ in range(NUM_NODES)] for _ in range(NUM_NODES)]
-
-        # self.predessor is a list of int
-        # self.predecessor keeps a list of the predecessor of this node in the
-        # path to each of the other nodes in the graph
-        # You need to make sure this predecessors list is correctly updated
-        # throughout the algorithm's execution
-        self.predecessors = [i for i in range(NUM_NODES)]
-        self.predecessors[self.nodeid] = None
-
-        # update node table row for self
-        self.dist_table[self.nodeid] = self.simulator.cost[self.nodeid]
-
-        # send packet to all neighbours
-        self.neighbours = self.find_neighbours()
-
-        vector = self.simulator.cost[self.nodeid]
-        self.send_packet_to_neighbours(vector)
+        self.dist_table = [[inf for _ in range(NUM_NODES)] for _ in range(NUM_NODES)]  
+        self.dist_table[self.nodeid] = self.simulator.cost[self.nodeid][:]  
+  
+        # self.predessor is a list of int  
+        # self.predecessor keeps a list of the predecessor of this node in the  
+        # path to each of the other nodes in the graph  
+        self.predecessors = [i for i in range(NUM_NODES)] # initialize self.predecessors list  
+        self.predecessors[self.nodeid] = None  
 
     def get_link_cost(self, other):
         """
@@ -79,10 +71,14 @@ class Node:
                 neighbours.append(i)
         return neighbours
 
-    def send_packet_to_neighbours(self, vector):
-        for i in self.neighbours:
-            packet = Packet(self.nodeid, i, vector)
-            self.simulator.to_link_layer(packet)
+    def send_pkt(self, vector):  
+        """
+        send packet to self node's neighbors 
+        """
+        for i in range(NUM_NODES):  
+            if i in self.neighbours:  
+                p = Packet(self.nodeid, i, vector)  
+                self.simulator.to_link_layer(p)  
 
     def update(self, pkt: Packet):
         """
@@ -92,29 +88,27 @@ class Node:
         packet correctly. Read dvsim.py for more details about the potential
         errors.
         """
-        if pkt.dest != self.nodeid:
-            raise RuntimeError("packet that is not designed to sending to me")
-
-        sender = pkt.src
-        sender_vector = pkt.dist_vector
-        self_vector = self.dist_table[self.nodeid]
-        update_call = False
-
-        # copy sender's row to dis table
-        self.dist_table[sender] = sender_vector
-
-        # update row for self
-        for node in self.neighbours:
-            dp = sender_vector[node] + self_vector[sender]
-            # if new path is shorter, then update dis table and predecessors
-            if dp < self_vector[node]:
-                update_call = True  # shorter path found, need to notify neighbours
-                self_vector[node] = dp
-                self.predecessors[node] = sender
-
-        # call link to layer if shorter path found
-        if update_call:
-            self.send_packet_to_neighbours(self_vector)
+        # copy sender vector  
+        self.dist_table[pkt.src] = pkt.dist_vector  
+        self_vector = self.get_dist_vector()  
+        old_vector = self_vector[:]  
+        for dst in range(len(self_vector)):  
+            if dst != self.nodeid:  # recalculate distance vectors to other nodes expect itself  
+                min_path_to_dst = inf  
+                for neighbor in self.neighbours:  
+                    new_path = self.get_link_cost(neighbor) + self.dist_table[neighbor][dst]  
+                    if new_path < min_path_to_dst: # if we find a new path smaller than the minimum path to destination node  
+                        min_path_to_dst = new_path  
+                        self.predecessors[dst] = neighbor  
+                # printout statement for report  
+                # if min_path_to_dst < self_vector[dst]:  
+                #     print("Node " + str(self.nodeid) + " " + "original shortest path to Node " + str(dst) + " with distance " + str(self_vector[dst]))  
+                #     print("Node " + str(self.nodeid) + " " + "New shortest path to Node " + str(dst) + " with distance " + str(min_path_to_dst))  
+  
+                self_vector[dst] = min_path_to_dst  # update the distance to destination node to new calculated minimum path  
+        # if some vector value in self_vector changes, tell neighbours  
+        if self_vector != old_vector:  
+            self.send_pkt(self_vector) 
 
     def link_cost_change_handler(self, which_link: int, new_cost: int):
         """
@@ -123,9 +117,11 @@ class Node:
         information that is stored at this node, and notify the neighbours if
         necessary.
         """
-
-        # TODO: implement this method
-        pass
+        if new_cost == inf: # handle edge case, when we set new_cost to inf, it means   
+                            # which_link no longer connects with self node  
+            self.neighbours.remove(which_link)  
+        self.dist_table[self.nodeid][which_link] = new_cost # update dist_table to new_cost  
+        self.send_pkt(self.dist_table[self.nodeid]) # tell neighbors that new cost change  
 
     def print_dist_table(self):
         """

@@ -173,6 +173,12 @@ class Simulator:
                      [4,   0,   1],
                      [50,  1,   0]]
 
+        # self.cost = [[0, 2, 1, 5, inf],
+        #              [2, 0, inf, 1, inf],
+        #              [1, inf, 0, 3, inf],
+        #              [5, 1, 3, 0, 1],
+        #              [inf, inf, inf, 1, 0]]
+
     def generate_random_topology(self):
         """
         This method generates a random topology with NUM_NODES nodes
@@ -191,7 +197,7 @@ class Simulator:
         """
         nodea = 0
         nodeb = 1
-        new_cost = 2
+        new_cost = 60
         if self.clocktime > 10001.0:
             new_cost = 8   # use different new_cost depending on its time
 
@@ -309,5 +315,5 @@ if __name__ == "__main__":
     # sim = Simulator(has_link_change, seed)
     # sim.run()
 
-    sim = Simulator(0, 0)
+    sim = Simulator(1, 0)
     sim.run()
